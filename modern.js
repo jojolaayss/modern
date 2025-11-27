@@ -12,6 +12,34 @@ async function loadprodut(){
   }
 }
 loadprodut();
+let cartcount = parseInt(localStorage.getItem('cartcount')) || 0;
+
+function uploadcartbadge() {
+  const badge = document.getElementById('Cart-count');
+  if (!badge) return;
+
+  if (cartcount > 0) {
+    badge.textContent = cartcount;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+  
+  localStorage.setItem('cartcount', cartcount);
+}
+localStorage.setItem('cartcount', '0');
+localStorage.setItem('cart', JSON.stringify([]));
+ cartcount = 0;
+uploadcartbadge();
+
+function addToCart(product) {
+  cartcount++;
+  uploadcartbadge();
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart.push(product);
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
 function displayProducts(products) {
   const grid = document.getElementById('product-grid');
   grid.innerHTML = ''; 
@@ -43,6 +71,9 @@ function displayProducts(products) {
     document.getElementById('modal-price').textContent=`${product.price} LYD`;
     const model=document.getElementById('product-modal');
     model.classList.remove('hidden');
+     document.getElementById('add-to-cart').onclick = () => {
+    addToCart(product);
+  };
     model.querySelector('[data-modal-hide]').addEventListener('click',()=>{
       model.classList.add('hidden');
      const closerBtn=model.querySelector(['data-modal-hide']);
